@@ -1,79 +1,61 @@
-# Next-Generation Developer Portfolio
+# Veerabhadra — Creative Developer
 
-A responsive React + TypeScript + Vite portfolio starter with a futuristic dark theme, project filters/search, project detail modal, static portfolio assistant, contact-to-email fallback, theme switcher, and mobile navigation.
+A responsive portfolio with an interactive CSS 3D hero, project detail views, motion-aware scroll reveals, and a Node.js contact API with SMTP delivery.
 
 ## Requirements
 
-- Node.js 20.19+ or 22.12+ recommended
+- Node.js 20.19+ (or 22.12+)
 - npm
 
 ## Run locally
 
-1. Extract the ZIP.
-2. Open the extracted folder in VS Code or a terminal.
-3. Install dependencies:
+```bash
+npm install
+npm run dev
+```
 
-   ```bash
-   npm install
-   ```
+Vite serves the website at `http://localhost:5173`; its `/api` requests are proxied to the Express API at `http://localhost:3001`. The health endpoint is `http://localhost:3001/api/health`.
 
-4. Start the development server:
+## Configure contact delivery
 
-   ```bash
-   npm run dev
-   ```
+Copy `.env.example` to `.env` and set SMTP credentials and the inbox that should receive portfolio inquiries:
 
-5. Open the local URL printed in the terminal (usually `http://localhost:5173`).
+```env
+PORT=3001
+SMTP_URL=smtps://username:password@smtp.example.com:465
+CONTACT_TO=you@example.com
+CONTACT_FROM=Portfolio <portfolio@example.com>
+```
 
-## Customize your information
+Keep `.env` out of version control. The contact API validates and limits submissions; it returns a clear error if SMTP is not configured or delivery fails. Replace `hello@example.com` in `src/App.tsx` with your real public email address for the direct-email fallback.
 
-Edit `src/data.ts`:
+## Customize the portfolio
 
-- Replace `YOUR NAME`, `your.email@example.com`, and the sample GitHub/LinkedIn links.
-- Update the education and about text.
-- Update project descriptions, status, technology tags, repository links, and demo links.
-- Delete any project template that does not represent your actual work.
+- Edit project details and image URLs in `src/data.ts`.
+- Update the introduction, about copy, and social links in `src/App.tsx`.
+- Adjust colors, responsive breakpoints, and the 3D composition in `src/styles.css`.
+- Update page title and social preview metadata in `index.html`.
 
-The StudySphere card is intentionally marked as a sample/in-progress template. Only claim completed features that you have actually built.
+The project cards currently contain concept/sample projects. Replace those descriptions and links with work you can publicly represent before publishing.
 
-## Resume
-
-The hero's **Print / Save CV** button opens the browser print dialog. Choose **Save as PDF** to create a PDF. For a recruiter-ready CV, update your real profile details and add a dedicated resume page or PDF before publishing.
-
-## Contact form
-
-The contact form validates required fields and opens the visitor's default email application with a prefilled message. It does not send or store messages on its own. Replace the sample email in `src/data.ts`. To send messages directly from the website, connect a trusted email provider through a server-side endpoint and protect it with validation and rate limiting.
-
-## AI assistant
-
-The included assistant is a static FAQ demo; it does not call an AI model. To enable a live model, create a server-side API endpoint and keep secrets in server environment variables. Never place private API keys in browser code or commit real secrets.
-
-## Build and preview
+## Build and run in production
 
 ```bash
 npm run build
-npm run preview
+npm start
 ```
 
-The production build is created in `dist/`.
+The Node server hosts the built `dist` frontend and the `/api` contact endpoints on the same port. Configure the SMTP environment variables in your hosting provider, and deploy to a Node-compatible host. A static-only host cannot run the contact API.
 
-## Deploy to Vercel
+`npm run preview` is available for a local frontend-only preview; contact API requests need the Node server.
 
-1. Push the project to a GitHub repository.
-2. Import that repository in Vercel.
-3. Use build command `npm run build`.
-4. Use output directory `dist`.
-5. Deploy. Add a custom domain in Vercel project settings if desired.
+## Deploy on Render
 
-Netlify can also deploy the project with build command `npm run build` and publish directory `dist`.
+The included `render.yaml` configures a free Node web service from the portfolio branch.
 
-## Before publishing checklist
+1. Open the [Render dashboard](https://dashboard.render.com/) and sign in with GitHub.
+2. Choose **New > Blueprint**, connect `Veerabhadra9949/portfolio`, and select the `veerabhadra9949-premium-3d-portfolio` branch.
+3. Review the `veerabhadra-portfolio` service and choose **Apply**. Render builds the site and API, then provides a public `onrender.com` URL.
+4. To enable contact-form delivery, open the service's **Environment** settings and add `SMTP_URL`, `CONTACT_TO`, and `CONTACT_FROM`. Save and redeploy. Keep SMTP credentials private.
 
-- [ ] Replace all personal placeholders.
-- [ ] Verify every GitHub, LinkedIn, and demo URL.
-- [ ] Add your actual profile photo and resume if wanted.
-- [ ] Remove untrue achievements or unfinished projects.
-- [ ] Test mobile navigation, project filters, modal, theme switch, and contact email fallback.
-- [ ] Run `npm run build`.
-- [ ] If enabling a real AI API, keep its key on the server.
-- [ ] Check keyboard navigation and reduced-motion settings.
+The website and API health check work without SMTP configuration; the contact form reports that email delivery is unavailable until those settings are added. Render's free service may spin down when idle, so its first request after inactivity can take a little longer.

@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: veerabhadra-portfolio
+    runtime: node
+    plan: free
+    branch: veerabhadra9949-premium-3d-portfolio
+    buildCommand: npm ci && npm run build
+    startCommand: npm start
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_VERSION
+        value: 22.12.0
