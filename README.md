@@ -48,3 +48,14 @@ npm start
 The Node server hosts the built `dist` frontend and the `/api` contact endpoints on the same port. Configure the SMTP environment variables in your hosting provider, and deploy to a Node-compatible host. A static-only host cannot run the contact API.
 
 `npm run preview` is available for a local frontend-only preview; contact API requests need the Node server.
+
+## Deploy on Render
+
+The included `render.yaml` configures a free Node web service from the portfolio branch.
+
+1. Open the [Render dashboard](https://dashboard.render.com/) and sign in with GitHub.
+2. Choose **New > Blueprint**, connect `Veerabhadra9949/portfolio`, and select the `veerabhadra9949-premium-3d-portfolio` branch.
+3. Review the `veerabhadra-portfolio` service and choose **Apply**. Render builds the site and API, then provides a public `onrender.com` URL.
+4. To enable contact-form delivery, open the service's **Environment** settings and add `SMTP_URL`, `CONTACT_TO`, and `CONTACT_FROM`. Save and redeploy. Keep SMTP credentials private.
+
+The website and API health check work without SMTP configuration; the contact form reports that email delivery is unavailable until those settings are added. Render's free service may spin down when idle, so its first request after inactivity can take a little longer.
